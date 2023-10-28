@@ -23,19 +23,17 @@ x_test1=build_numerical_cos(x_test1, categorical_columns, numeric_columns)
 
 #Useful functions
 def build_k_indices(y, k_fold, seed):
-    """build k indices for k-fold.
-
-    Args:
-        y:      shape=(N,)
-        k_fold: K in K-fold, i.e. the fold num
-        seed:   the random seed
-
-    Returns:
-        A 2D array of shape=(k_fold, N/k_fold) that indicates the data indices for each fold
-
-    >>> build_k_indices(np.array([1., 2., 3., 4.]), 2, 1)
-    array([[3, 2],
-           [0, 1]])
+    """
+    Build k indices for k-fold.
+    
+    ------------
+    Arguments:
+        y: Array, shape=(N,)
+        k_fold: int, K in K-fold, i.e. the fold num
+        seed: int, the random seed
+    ------------
+    Return:
+        k_indices, A 2D array of shape=(k_fold, N/k_fold) that indicates the data indices for each fold
     """
     num_row = y.shape[0]
     interval = int(num_row / k_fold)
@@ -45,21 +43,21 @@ def build_k_indices(y, k_fold, seed):
     return np.array(k_indices)
 
 def cross_validation(y, x, w_initial, k_indices, k, lambda_, gamma):
-    """return the loss of ridge regression for a fold corresponding to k_indices
-
-    Args:
-        y:          shape=(N,)
-        x:          shape=(N,)
-        k_indices:  2D array returned by build_k_indices()
-        k:          scalar, the k-th fold (N.B.: not to confused with k_fold which is the fold nums)
-        lambda_:    scalar, cf. ridge_regression()
-        degree:     scalar, cf. build_poly()
-
+    """
+    Compute the loss of regularized logisitc regression for a fold corresponding to k_indices
+    
+    ------------
+    Arguments:
+        y: array, shape=(N,)
+        x: array, shape=(N,D)
+        k_indices: array, returned by build_k_indices()
+        k: int, the k-th fold (N.B.: not to confused with k_fold which is the fold nums)
+        lambda_: int, hyperparameter for regularized logistic regression
+        gamma: int, hyperparameter for regularized logistic regression
+    -------------
+    
     Returns:
-        train and test root mean square errors rmse = sqrt(2 mse)
-
-    >>> cross_validation(np.array([1.,2.,3.,4.]), np.array([6.,7.,8.,9.]), np.array([[3,2], [0,1]]), 1, 2, 3)
-    (0.019866645527597114, 0.33555914361295175)
+        loss_tr, loss_te, train and test root mean square errors rmse = sqrt(2 mse)
     """
 
     # get k'th subgroup in test, others in train: 
@@ -78,25 +76,21 @@ def cross_validation(y, x, w_initial, k_indices, k, lambda_, gamma):
 
     return loss_tr, loss_te, w_final
 
-def cross_validation_visualization(param, rmse_tr, rmse_te):
-    """visualization the curves of rmse_tr and rmse_te."""
-    plt.semilogx(lambds, rmse_tr, marker=".", color="b", label="train error")
-    plt.semilogx(lambds, rmse_te, marker=".", color="r", label="test error")
-    plt.xlabel("lambda")
-    plt.ylabel("r mse")
-    # plt.xlim(1e-4, 1)
-    plt.title("cross validation")
-    plt.legend(loc=2)
-    plt.grid(True)
-    plt.savefig("cross_validation")
     
 def cross_validation_demo(y, x, k_fold, lambdas, gammas, w_initial):
-    """cross validation over regularisation parameter lambda.
+    """
+    cross validation over hyperparameters lambda and gamma.
 
-    Args:
-        degree: integer, degree of the polynomial expansion
-        k_fold: integer, the number of folds
-        lambdas: shape = (p, ) where p is the number of values of lambda to test
+    ------------
+    Arguments:
+        y: array, shape=(N,)
+        x: array, shape=(N,D)
+        k_fold: int, the number of folds
+        lambdas: list, shape = (p, ) where p is the number of values of lambda to test
+        gammas: list, shape = (q, ) where q is the number of values of gamma to test
+        w_initial: array, shape (,D), initial weights for regularized logistic regression
+    ------------
+    
     Returns:
         best_lambda : scalar, value of the best lambda
         best_rmse : scalar, the associated root mean squared error for the best lambda
