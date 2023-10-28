@@ -11,5 +11,5 @@ FILE helpers.py : The given functions to load the data and create a submission f
 
 FILE test_with_balanced_subsets.py : All the tests on each function returning their accuracy and f1-score, in order to choose the best one. Each test is first looking for the best hyperparameters in order to compare the functions based on their optimal parameters, and then returns the best parameters, the accuracy and the f1 score. Those tests are based on balanced subsets extracted from the data.
 
-FILE test_K_fold_unbalanced_dataset.py : Test of least squares followed by regularized logistic regression, using cross validation to find best hyperparameters. This test is based on unbalanced data.
+FILE K_fold_unbalanced_dataset.py : Test of least squares followed by regularized logistic regression, using cross validation to find best hyperparameters. This test is based on unbalanced data.
 
